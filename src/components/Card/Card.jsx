@@ -1,13 +1,16 @@
-import { Calendar } from "../Calendar/Calendar";
+import { CardTopic, TopicText } from '../Card/Card.styled';
 
 export const Card = ({ card }) => {
     return (
         <div className='cards__item'>
             <div className='cards__card card'>
                 <div className='card__group'>
-                    <div className='card__theme _orange'>
+                    <CardTopic $topicColor={'_purple'}>
+                        <TopicText>{card.topic}</TopicText>
+                    </CardTopic>
+                    {/* <div className='card__theme _orange'>
                         <p className='_orange'>{card.topic}</p>
-                    </div>
+                    </div> */}
                     <a href='#popBrowse' target='_self'>
                         <div className='card__btn'>
                             <div></div>
