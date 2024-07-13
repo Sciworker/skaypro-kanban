@@ -1,5 +1,5 @@
 import "../../App.css";
-import { cardList } from "../../data";
+import { cardList } from "../../lib/data";
 import { Card } from "../Card/Card";
 
 function Column({ title, cards }) {
