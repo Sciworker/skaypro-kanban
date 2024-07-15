@@ -5,7 +5,7 @@ import PopBrowse from "./components/Popups/PopBrowse/PopBrowse";
 import Header from "./components/Header/Header";
 import Main from "./components/Main/Main";
 import { useEffect, useState } from "react";
-import { cardList } from "./data";
+import { cardList } from "./lib/data";
 import { Wrapper } from "./components/Wrapper/Wrapper";
 function App() {
     const [cards, setCards] = useState(cardList);
