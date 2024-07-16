@@ -1,10 +1,11 @@
 import { StyledCard, CardTopic, TopicText, Group, Button, Title, Content, Date } from '../Card/Card.styled';
+import { topicColors } from "../../lib/topic";
 
 export const Card = ({ card }) => {
     return (
         <StyledCard>
             <Group>
-                <CardTopic $topicColor={'_purple'}>
+                <CardTopic $topicColor={topicColors[card.topic]}>
                     <TopicText>{card.topic}</TopicText>
                 </CardTopic>
                 <a href='#popBrowse' target='_self'>
