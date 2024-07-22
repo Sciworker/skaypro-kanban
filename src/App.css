@@ -136,6 +136,10 @@
   color: #FFFFFF;
 }
 
+._orange {
+  background-color: #FFE4C2;
+  color: #FF6D00;
+}
 .categories {
   margin-bottom: 20px;
 }
@@ -300,6 +304,10 @@
   padding: 11px 14px 10px;
   margin-right: 7px;
   margin-bottom: 7px;
+}
+._gray {
+  background: #94A6BE;
+  color: #FFFFFF;
 }
 .status__theme p {
   font-size: 14px;

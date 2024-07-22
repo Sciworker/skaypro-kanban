@@ -1,55 +1,39 @@
-import {
-    useNavigate,
-} from "react-router-dom";
 import MainPage from "../pages/MainPage/MainPage";
 import NotFound from "../pages/NotFound/NotFound";
 import Login from "../pages/Login/Login";
 import SignUp from "../pages/SignUp/SignUp";
 import LogOut from "../pages/LogOut/LogOut";
 import CardView from "../pages/CardView/CardView";
-import { useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
+import { Navigate, Outlet } from "react-router-dom";
 
-function ProtectedRoute({ children }) {
+function ProtectedRoute() {
     const { isAuth } = useAuth();
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!isAuth) {
-            navigate("/login");
-        }
-    }, [isAuth, navigate]);
 
     if (!isAuth) {
-        return null;
+        return <Navigate to="/login" />;
     }
-    return children;
+    return <Outlet />;
 }
 
 export const routes = [
     {
         path: "/",
-        element: (
-            <ProtectedRoute>
-                <MainPage />
-            </ProtectedRoute>
-        ),
+        element: <ProtectedRoute />,
         children: [
             {
-                path: "/exit",
-                element: (
-                    <ProtectedRoute>
-                        <LogOut />
-                    </ProtectedRoute>
-                ),
-            },
-            {
-                path: "/card/:id",
-                element: (
-                    <ProtectedRoute>
-                        <CardView />
-                    </ProtectedRoute>
-                ),
+                path: "/",
+                element: <MainPage />,
+                children: [
+                    {
+                        path: "exit",
+                        element: <LogOut />,
+                    },
+                    {
+                        path: "card/:id",
+                        element: <CardView />,
+                    },
+                ],
             },
         ],
     },

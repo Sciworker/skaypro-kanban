@@ -6,6 +6,8 @@ export const Wrapper = styled.div`
     min-height: 100vh;
     overflow: hidden;
     background-color: #f1f1f1;
+    display: flex;
+    flex-direction: column;
 `;
 
 export const Container = styled.div`

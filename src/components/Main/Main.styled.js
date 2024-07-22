@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const StyledMain = styled.main`
     width: 100%;
+    flex-grow: 1;
     background-color: #eaeef6;
 `;
 
