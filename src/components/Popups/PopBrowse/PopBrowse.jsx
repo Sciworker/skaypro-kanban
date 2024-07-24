@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import "../../../App.css";
 import { Calendar } from "../../Calendar/Calendar";
+import { CardTopic, TopicText } from "./PopBrowse.styled";
+import { topicColors } from "../../../lib/topic";
 
-function PopBrowse({ cardId }) {
+function PopBrowse({ card }) {
     return (
         <div className='pop-browse' id='popBrowse'>
             <div className='pop-browse__container'>
@@ -10,11 +12,11 @@ function PopBrowse({ cardId }) {
                     <div className='pop-browse__content'>
                         <div className='pop-browse__top-block'>
                             <h3 className='pop-browse__ttl'>
-                                #{cardId} Название задачи
+                                {card.title}
                             </h3>
-                            <div className='categories__theme theme-top _orange _active-category'>
-                                <p className='_orange'>Web Design</p>
-                            </div>
+                            <CardTopic $topicColor={topicColors[card.topic]}>
+                                <TopicText>{card.topic}</TopicText>
+                            </CardTopic>
                         </div>
                         <div className='pop-browse__status status'>
                             <p className='status__p subttl'>Статус</p>
@@ -23,7 +25,7 @@ function PopBrowse({ cardId }) {
                                     <p>Без статуса</p>
                                 </div>
                                 <div className='status__theme _gray'>
-                                    <p className='_gray'>Нужно сделать</p>
+                                    <p className='_gray'>{card.status}</p>
                                 </div>
                                 <div className='status__theme _hide'>
                                     <p>В работе</p>
