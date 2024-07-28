@@ -1,79 +1,144 @@
 import "../../../App.css";
+import { Container, StyledPopNewCard, Block, Content, Title, CloseButton, Wrap, Form, FormBlock, Subtitle, Input, Area, CreateButton, Categories, P, Themes, CardTopic, TopicText } from "./PopNewCard.styled";
+import { topicColors } from "../../../lib/topic";
+import { useReducer, useState } from "react";
+import { createCard } from "../../../api/kanban";
+import { useAuth } from "../../../contexts/AuthContext";
+import { useCards } from "../../../contexts/CardsContext";
 import { Calendar } from "../../Calendar/Calendar";
 
-function PopNewCard() {
+const topics = Object.keys(topicColors);
+
+const initialState = {
+    title: "",
+    description: "",
+    topic: "",
+    date: "",
+};
+
+const reducer = (state, action) => {
+    switch (action.type) {
+        case "title":
+            return { ...state, title: action.payload };
+        case "description":
+            return { ...state, description: action.payload };
+        case "topic":
+            return { ...state, topic: action.payload };
+        case "date":
+            return { ...state, date: action.payload };
+        default:
+            return state;
+    }
+};
+
+function PopNewCard({ onClose }) {
+    const [isTaskCreating, setIsTaskCreating] = useState(false);
+    const [error, setError] = useState("");
+    const [taskData, dispatch] = useReducer(reducer, initialState);
+    const { token } = useAuth();
+    const { setCards } = useCards();
+
+    const onCreate = async () => {
+        setError("");
+        setIsTaskCreating(true);
+        try {
+            const tasks = await createCard(token, {
+                ...taskData,
+                date: new Date(taskData.date).toISOString(),
+            });
+            console.log(tasks);
+            setCards(tasks);
+            onClose();
+        } catch (e) {
+            console.error(e.message);
+            setError("Ошибка");
+        } finally {
+            setIsTaskCreating(false);
+        }
+    };
+
     return (
-        <div className='pop-new-card' id='popNewCard'>
-            <div className='pop-new-card__container'>
-                <div className='pop-new-card__block'>
-                    <div className='pop-new-card__content'>
-                        <h3 className='pop-new-card__ttl'>Создание задачи</h3>
-                        <a href='#' className='pop-new-card__close'>
-                            &#10006;
-                        </a>
-                        <div className='pop-new-card__wrap'>
-                            <form
-                                className='pop-new-card__form form-new'
-                                id='formNewCard'
-                                action='#'
-                            >
-                                <div className='form-new__block'>
-                                    <label
-                                        htmlFor='formTitle'
-                                        className='subttl'
-                                    >
+        <StyledPopNewCard id='popNewCard'>
+            <Container>
+                <Block>
+                    <Content>
+                        <Title>Создание задачи</Title>
+                        <CloseButton onClick={onClose}>&#10006;</CloseButton>
+                        <Wrap>
+                            <Form id='formNewCard' action='#'>
+                                <FormBlock>
+                                    <Subtitle htmlFor='formTitle'>
                                         Название задачи
-                                    </label>
-                                    <input
-                                        className='form-new__input'
+                                    </Subtitle>
+                                    <Input
                                         type='text'
                                         name='name'
                                         id='formTitle'
+                                        value={taskData.title}
+                                        onChange={(e) =>
+                                            dispatch({
+                                                type: "title",
+                                                payload: e.target.value,
+                                            })
+                                        }
                                         placeholder='Введите название задачи...'
                                         autoFocus
                                     />
-                                </div>
-                                <div className='form-new__block'>
-                                    <label
-                                        htmlFor='textArea'
-                                        className='subttl'
-                                    >
+                                </FormBlock>
+                                <FormBlock>
+                                    <Subtitle htmlFor='textArea'>
                                         Описание задачи
-                                    </label>
-                                    <textarea
-                                        className='form-new__area'
+                                    </Subtitle>
+                                    <Area
                                         name='text'
                                         id='textArea'
                                         placeholder='Введите описание задачи...'
-                                    ></textarea>
-                                </div>
-                            </form>
-                            <Calendar />
-                        </div>
-                        <div className='pop-new-card__categories categories'>
-                            <p className='categories__p subttl'>Категория</p>
-                            <div className='categories__themes'>
-                                <div className='categories__theme _orange _active-category'>
-                                    <p className='_orange'>Web Design</p>
-                                </div>
-                                <div className='categories__theme _green'>
-                                    <p className='_green'>Research</p>
-                                </div>
-                                <div className='categories__theme _purple'>
-                                    <p className='_purple'>Copywriting</p>
-                                </div>
-                            </div>
-                        </div>
-                        <button
-                            className='form-new__create _hover01'
+                                        value={taskData.description}
+                                        onChange={(e) =>
+                                            dispatch({
+                                                type: "description",
+                                                payload: e.target.value,
+                                            })
+                                        }
+                                    ></Area>
+                                </FormBlock>
+                            </Form>
+                            <Calendar value={taskData.date} onSelect={(date) => dispatch({ type: "date", payload: date })} />
+                        </Wrap>
+                        <Categories>
+                            <P>Категория</P>
+                            <Themes>
+                                {topics.map((topic) => (
+                                    <CardTopic
+                                        $active={
+                                            taskData.topic
+                                                ? topic === taskData.topic
+                                                : topic === 'Web Design'
+                                        }
+                                        $topicColor={topicColors[topic]}
+                                        key={topic}
+                                        onClick={() =>
+                                            dispatch({
+                                                type: "topic",
+                                                payload: topic,
+                                            })
+                                        }
+                                    >
+                                        <TopicText>{topic}</TopicText>
+                                    </CardTopic>
+                                ))}
+                            </Themes>
+                        </Categories>
+                        <CreateButton
                             id='btnCreate'
+                            onClick={onCreate}
                         >
-                            Создать задачу
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+                            {isTaskCreating ? "Создание..." : error ? error : "Создать задачу"}
+                        </CreateButton>
+                    </Content>
+                </Block>
+            </Container>
+        </StyledPopNewCard>
     );
 }
 
