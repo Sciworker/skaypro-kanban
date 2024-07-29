@@ -58,7 +58,6 @@ export const StyledCalendar = styled.div`
     }
     .rdp-day_button:hover {
         background-color: #EAEEF6;
-;
     }
 `;
 

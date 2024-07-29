@@ -1,31 +1,29 @@
 import "../../../App.css";
-import { Container, StyledPopNewCard, Block, Content, Title, CloseButton, Wrap, Form, FormBlock, Subtitle, Input, Area, CreateButton, Categories, P, Themes, CardTopic, TopicText } from "./PopNewCard.styled";
+import { Container, StyledPopNewCard, Block, Content, Title, CloseButton, Wrap, Form, FormBlock, Subtitle, Input, Area, CreateButton, Categories, P, Themes, CardTopic, TopicText, FormInfo } from "./PopNewCard.styled";
 import { topicColors } from "../../../lib/topic";
 import { useReducer, useState } from "react";
 import { createCard } from "../../../api/kanban";
 import { useAuth } from "../../../contexts/AuthContext";
 import { useCards } from "../../../contexts/CardsContext";
 import { Calendar } from "../../Calendar/Calendar";
+import { set } from "date-fns";
 
 const topics = Object.keys(topicColors);
 
 const initialState = {
     title: "",
     description: "",
-    topic: "",
+    topic: "Web Design",
     date: "",
 };
 
 const reducer = (state, action) => {
     switch (action.type) {
         case "title":
-            return { ...state, title: action.payload };
         case "description":
-            return { ...state, description: action.payload };
         case "topic":
-            return { ...state, topic: action.payload };
         case "date":
-            return { ...state, date: action.payload };
+            return { ...state, [action.type]: action.payload };
         default:
             return state;
     }
@@ -35,23 +33,37 @@ function PopNewCard({ onClose }) {
     const [isTaskCreating, setIsTaskCreating] = useState(false);
     const [error, setError] = useState("");
     const [taskData, dispatch] = useReducer(reducer, initialState);
+    const [fieldErrors, setFieldErrors] = useState({});
     const { token } = useAuth();
     const { setCards } = useCards();
 
+    const validateForm = () => {
+        const errors = {};
+        if (!taskData.title) errors.title = true;
+        if (!taskData.description) errors.description = true;
+        setFieldErrors(errors);
+
+        if (Object.keys(errors).length) {
+            setError("Пожалуйста, заполните все поля.");
+            return false;
+        }
+        return true;
+    }
+
     const onCreate = async () => {
+        if (!validateForm()) return;
         setError("");
         setIsTaskCreating(true);
         try {
             const tasks = await createCard(token, {
                 ...taskData,
-                date: new Date(taskData.date).toISOString(),
+                date: taskData.date ? new Date(taskData.date).toISOString() : new Date().toISOString(),
             });
-            console.log(tasks);
             setCards(tasks);
             onClose();
         } catch (e) {
             console.error(e.message);
-            setError("Ошибка");
+            setError("Ошибка создания задачи. Пожалуйста, попробуйте снова.");
         } finally {
             setIsTaskCreating(false);
         }
@@ -71,15 +83,17 @@ function PopNewCard({ onClose }) {
                                         Название задачи
                                     </Subtitle>
                                     <Input
+                                        $error={fieldErrors.title}
                                         type='text'
                                         name='name'
                                         id='formTitle'
                                         value={taskData.title}
-                                        onChange={(e) =>
+                                        onChange={(e) => {
                                             dispatch({
                                                 type: "title",
                                                 payload: e.target.value,
-                                            })
+                                            });
+                                            }
                                         }
                                         placeholder='Введите название задачи...'
                                         autoFocus
@@ -90,15 +104,17 @@ function PopNewCard({ onClose }) {
                                         Описание задачи
                                     </Subtitle>
                                     <Area
+                                        $error={fieldErrors.description}
                                         name='text'
                                         id='textArea'
                                         placeholder='Введите описание задачи...'
                                         value={taskData.description}
-                                        onChange={(e) =>
+                                        onChange={(e) => {
                                             dispatch({
                                                 type: "description",
                                                 payload: e.target.value,
                                             })
+                                        }
                                         }
                                     ></Area>
                                 </FormBlock>
@@ -111,9 +127,7 @@ function PopNewCard({ onClose }) {
                                 {topics.map((topic) => (
                                     <CardTopic
                                         $active={
-                                            taskData.topic
-                                                ? topic === taskData.topic
-                                                : topic === 'Web Design'
+                                            topic === taskData.topic
                                         }
                                         $topicColor={topicColors[topic]}
                                         key={topic}
@@ -132,9 +146,11 @@ function PopNewCard({ onClose }) {
                         <CreateButton
                             id='btnCreate'
                             onClick={onCreate}
+                            disabled={isTaskCreating}
                         >
-                            {isTaskCreating ? "Создание..." : error ? error : "Создать задачу"}
+                            {isTaskCreating ? "Создание..." : "Создать задачу"}
                         </CreateButton>
+                        <FormInfo>{error}</FormInfo>
                     </Content>
                 </Block>
             </Container>
