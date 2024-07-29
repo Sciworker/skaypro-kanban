@@ -1,17 +1,21 @@
 import "../../App.css";
-import { cardList } from "../../lib/data";
 import { Card } from "../Card/Card";
+import { Cards, Item, StyledColumn, Title } from "./Column.styled";
 
 function Column({ title, cards }) {
     return (
-        <div className='main__column column'>
-            <div className='column__title'>
+        <StyledColumn>
+            <Title>
                 <p>{title}</p>
-            </div>
-			<div className='cards'>
-				{cards.map(card => <Card key={card.id} card={card} />)}
-            </div>
-        </div>
+            </Title>
+            <Cards>
+                {cards.map((card) => (
+                    <Item key={card._id}>
+                        <Card card={card} />
+                    </Item>
+                ))}
+            </Cards>
+        </StyledColumn>
     );
 }
 

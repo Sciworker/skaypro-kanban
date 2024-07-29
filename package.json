@@ -10,8 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "date-fns": "^3.6.0",
     "react": "^18.2.0",
+    "react-day-picker": "^9.0.4",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.24.1",
     "styled-components": "^6.1.11"
   },
   "devDependencies": {

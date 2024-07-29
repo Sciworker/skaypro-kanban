@@ -1,6 +1,7 @@
 import "../../App.css";
 import Column from "../Column/Column";
-import { Card } from "../Card/Card";
+import { Container } from "../../App.styled";
+import { Block, Content, StyledMain } from "./Main.styled";
 
 const statusList = [
     "Без статуса",
@@ -10,16 +11,18 @@ const statusList = [
     "Готово",
 ];
 
-function Main({ cards, isLoading }) {
+function Main({ cards, isLoading, error }) {
+    console.log(cards);
     return (
         <>
-            <main className='main'>
-                <div className='container'>
-                    <div className='main__block'>
+            <StyledMain>
+                <Container>
+                    <Block>
                         {isLoading ? (
-                            <p>Данные загружаются</p>
-                        ) : (
-                            <div className='main__content'>
+                            <p>Загрузка данных. Пожалуйста, подождите...</p>
+                        ) : error ?
+                            (<p>Ошибка: {error}</p>) : (
+                            <Content>
                                 {statusList.map((status) => (
                                     <Column
                                         key={status}
@@ -29,11 +32,11 @@ function Main({ cards, isLoading }) {
                                         )}
                                     />
                                 ))}
-                            </div>
+                            </Content>
                         )}
-                    </div>
-                </div>
-            </main>
+                    </Block>
+                </Container>
+            </StyledMain>
         </>
     );
 }

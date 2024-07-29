@@ -1,67 +1,65 @@
-import '../../App.css'
 import { useState } from 'react';
+import { Container } from '../../App.styled';
+import "../../App.css";
+import { Block, Button, Logo, Nav, StyledHeader, User, UserMail, UserName, UserSetContainer, UserTheme } from './Header.styled';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
-function Header({ onCardAdd }) {
+function Header({ showAddCardPopup }) {
+    const { user } = useAuth();
 	const [isUserSetOpen, setIsUserSetOpen] = useState(false);
-	
+
     return (
-        <header className='header'>
-            <div className='container'>
-                <div className='header__block'>
-                    <div className='header__logo _show _light'>
+        <StyledHeader>
+            <Container>
+                <Block>
+                    <Logo>
                         <a href='' target='_self'>
                             <img src='images/logo.png' alt='logo' />
                         </a>
-                    </div>
-                    <div className='header__logo _dark'>
+                    </Logo>
+                    {/* <div className='header__logo _show _light'>
+                        <a href='' target='_self'>
+                            <img src='images/logo.png' alt='logo' />
+                        </a>
+                    </div> */}
+                    {/* <div className='header__logo _dark'>
                         <a href='' target='_self'>
                             <img src='images/logo_dark.png' alt='logo' />
                         </a>
-                    </div>
-                    <nav className='header__nav'>
-                        <button
-                            className='header__btn-main-new _hover01'
-                            id='btnMainNew'
-                            onClick={onCardAdd}
-                        >
-                            {/* <a href="#popNewCard">Создать новую задачу</a> */}
+                    </div> */}
+                    <Nav>
+                        <Button id='btnMainNew' onClick={showAddCardPopup}>
                             Создать новую задачу
-                        </button>
-                        <a
-                            href='#user-set-target'
-                            className='header__user _hover02'
-                            onClick={() => setIsUserSetOpen(!isUserSetOpen)}
-                        >
-                            Ivan Ivanov
-                        </a>
+                        </Button>
+                        <User onClick={() => setIsUserSetOpen(!isUserSetOpen)}>
+                            {user?.name}
+                        </User>
                         {isUserSetOpen && (
-                            <div
-                                className='header__pop-user-set pop-user-set'
-                                id='user-set-target'
-                            >
-                                <p className='pop-user-set__name'>
-                                    Ivan Ivanov
-                                </p>
-                                <p className='pop-user-set__mail'>
-                                    ivan.ivanov@gmail.com
-                                </p>
-                                <div className='pop-user-set__theme'>
+                            <UserSetContainer id='user-set-target'>
+                                <UserName>{user?.name}</UserName>
+                                <UserMail>{user?.login}</UserMail>
+                                <UserTheme>
                                     <p>Темная тема</p>
                                     <input
                                         type='checkbox'
                                         className='checkbox'
                                         name='checkbox'
                                     />
-                                </div>
-                                <button type='button' className='_hover03'>
-                                    <a href='#popExit'>Выйти</a>
+                                </UserTheme>
+                                <button
+                                    type='button'
+                                    onClick={() => setIsUserSetOpen(false)}
+                                >
+                                    <Link to='/exit'>Выйти</Link>
+                                    {/* <a href='#popExit'>Выйти</a> */}
                                 </button>
-                            </div>
+                            </UserSetContainer>
                         )}
-                    </nav>
-                </div>
-            </div>
-        </header>
+                    </Nav>
+                </Block>
+            </Container>
+        </StyledHeader>
     );
 }
 

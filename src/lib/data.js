@@ -8,14 +8,14 @@ export const cardList = [
     },
     {
         id: 2,
-        topic: 'Web Design',
+        topic: 'Research',
         title: 'Задача 2',
         date: '12.12.2022',
         status: 'В работе',
     },
     {
         id: 3,
-        topic: 'Web Design',
+        topic: 'Copywriting',
         title: 'Задача 3',
         date: '12.12.2022',
         status: 'Тестирование',
@@ -29,7 +29,7 @@ export const cardList = [
     },
     {
         id: 5,
-        topic: 'Web Design',
+        topic: 'Research',
         title: 'Задача 5',
         date: '12.12.2022',
         status: 'Без статуса',
