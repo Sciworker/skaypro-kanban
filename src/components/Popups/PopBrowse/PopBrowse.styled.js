@@ -24,7 +24,3 @@ export const CardTopic = styled.div`
             topicStyles[$topicColor]?.color || "#06b16e"};
     }
 `;
-
-// ._active-category {
-//   opacity: 1 !important;
-// } 

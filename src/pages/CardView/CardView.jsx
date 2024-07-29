@@ -1,15 +1,24 @@
+import { useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import PopBrowse from "../../components/Popups/PopBrowse/PopBrowse";
-import { cardList } from "../../lib/data";
-import { useMemo } from "react";
+import PopBrowse from "../../components/Popups/PopBrowse/PopBrowse.jsx";
+import { useCards } from "../../contexts/CardsContext";
 
 export default function CardView() {
     const { id } = useParams();
-    const card = useMemo(() => {
-        return cardList.find((card) => card.id === +id);
-    }, [id]);
+    const { cards } = useCards();
+    const card = useMemo(() => cards.find(c => c._id === id), [id, cards]);
+
+    const [isPopupOpen, setIsPopupOpen] = useState(true);
+
+    const handleClosePopup = () => {
+        setIsPopupOpen(false);
+    };
 
     return (
-        <PopBrowse card={card}/>
+        <>
+            {isPopupOpen && card && (
+                <PopBrowse card={card} onClose={handleClosePopup} />
+            )}
+        </>
     );
 }

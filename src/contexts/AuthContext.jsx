@@ -2,9 +2,9 @@ import { createContext, useContext, useMemo, useState, useEffect } from "react";
 
 const AuthContext = createContext();
 
+// eslint-disable-next-line react/prop-types
 export const AuthContextProvider = ({ children }) => {
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
-    // const [token, setToken] = useState(localStorage.getItem('token') || null);
 
     useEffect(() => {
         if (user) {

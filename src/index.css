@@ -31,4 +31,18 @@ body {
     height: 100%;
     font-family: "Roboto", Arial, Helvetica, sans-serif;
     color: #000000;
+
+    --header-backround-color: #ffffff;
+
+    --main-backround-color: #eaeef6;
+    --main-backround-card-color: #ffffff;
+    --main-text-card-color: #000000;
+}
+
+body.dark {
+    --header-backround-color: #23282B;
+
+    --main-backround-color: #393939;
+    --main-backround-card-color: #696969;
+    --main-text-card-color: #ffffff;
 }

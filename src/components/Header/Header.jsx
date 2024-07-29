@@ -1,13 +1,21 @@
-import { useState } from 'react';
+import {useContext, useState} from 'react';
 import { Container } from '../../App.styled';
 import "../../App.css";
 import { Block, Button, Logo, Nav, StyledHeader, User, UserMail, UserName, UserSetContainer, UserTheme } from './Header.styled';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import {ThemeContext} from './DarkAndLightMode/DarkAndLightMode.jsx';
 
+// eslint-disable-next-line react/prop-types
 function Header({ showAddCardPopup }) {
     const { user } = useAuth();
 	const [isUserSetOpen, setIsUserSetOpen] = useState(false);
+
+    const [theme, setTheme] = useContext(ThemeContext);
+
+    const changeTheme = () => {
+        setTheme(theme === 'light' ? 'dark' : 'light')
+    }
 
     return (
         <StyledHeader>
@@ -15,19 +23,11 @@ function Header({ showAddCardPopup }) {
                 <Block>
                     <Logo>
                         <a href='' target='_self'>
-                            <img src='images/logo.png' alt='logo' />
+                            <img
+                                src={theme === 'dark' ? 'images/logo_dark.png' : 'images/logo.png'}
+                                alt='logo' />
                         </a>
                     </Logo>
-                    {/* <div className='header__logo _show _light'>
-                        <a href='' target='_self'>
-                            <img src='images/logo.png' alt='logo' />
-                        </a>
-                    </div> */}
-                    {/* <div className='header__logo _dark'>
-                        <a href='' target='_self'>
-                            <img src='images/logo_dark.png' alt='logo' />
-                        </a>
-                    </div> */}
                     <Nav>
                         <Button id='btnMainNew' onClick={showAddCardPopup}>
                             Создать новую задачу
@@ -45,6 +45,8 @@ function Header({ showAddCardPopup }) {
                                         type='checkbox'
                                         className='checkbox'
                                         name='checkbox'
+                                        checked={theme === 'dark'}
+                                        onChange={changeTheme}
                                     />
                                 </UserTheme>
                                 <button
@@ -52,7 +54,6 @@ function Header({ showAddCardPopup }) {
                                     onClick={() => setIsUserSetOpen(false)}
                                 >
                                     <Link to='/exit'>Выйти</Link>
-                                    {/* <a href='#popExit'>Выйти</a> */}
                                 </button>
                             </UserSetContainer>
                         )}

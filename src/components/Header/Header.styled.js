@@ -4,7 +4,7 @@ import { hover01, hover02, hover03 } from '../../App.styled';
 export const StyledHeader = styled.header`
     width: 100%;
     margin: 0 auto;
-    background-color: #ffffff;
+    background-color: var(--header-backround-color);
 `;
 
 export const Block = styled.div`

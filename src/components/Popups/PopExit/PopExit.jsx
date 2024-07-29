@@ -3,6 +3,7 @@ import { StyledExitPopup, Block, Title, FormGroup, YesButton, NoButton } from ".
 import { PopupContainer } from "../../../App.styled";
 import { Link } from "react-router-dom";
 
+// eslint-disable-next-line react/prop-types
 function PopExit({ onExit }) {
     return (
         <StyledExitPopup id='popExit'>

@@ -76,7 +76,3 @@ export const PopupContainer = styled.div`
     justify-content: center;
     background: rgba(0, 0, 0, 0.4);
 `;
-
-// export const BaseButton = styled.button`
-
-// `

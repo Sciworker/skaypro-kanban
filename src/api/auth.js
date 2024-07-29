@@ -41,4 +41,3 @@ export const authentication = async (credentials) => {
     const data = await response.json();
     return data;
 }
-
