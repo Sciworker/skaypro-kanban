@@ -4,11 +4,35 @@ import { Calendar } from "../../Calendar/Calendar";
 import { useCards } from '../../../contexts/CardsContext';
 import { updateCard, deleteCard } from "../../../api/kanban.js";
 import { statusList } from "../../Main/Main.jsx";
-import { CardTopic, TopicText } from "./PopBrowse.styled";
+import {
+    CardTopic,
+    TopicText,
+    PopBrowseWrapper,
+    PopBrowseContainer,
+    PopBrowseBlock,
+    PopBrowseContent,
+    PopBrowseTopBlock,
+    PopBrowseTitle,
+    SelectStatus,
+    StatusWrapper,
+    StatusText,
+    StatusThemes,
+    PopBrowseWrap,
+    StatusTheme,
+    StatusThemeText,
+    PopBrowserForm,
+    FormBrowseBlock,
+    PopBrowseLabel,
+    FormBrowseTextArea,
+    PopBrowseButtons,
+    ButtonGroup,
+    EditButton, SaveButton, DeleteButton, CloseButton,
+    EditTitle,
+} from "./PopBrowse.styled";
 import { topicColors } from "../../../lib/topic";
 
 // eslint-disable-next-line react/prop-types
-export default function PopBrowse({ card, onClose }) {
+export default function PopBrowse ({ card, onClose }) {
     const { deleteCardInContext, updateCardInContext } = useCards();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
@@ -19,11 +43,12 @@ export default function PopBrowse({ card, onClose }) {
         description: '',
         topic: '',
     });
+    const [selectedDate, setSelectedDate] = useState(null);
 
-    const [selectedDate, setSelectedDate] = useState(null); // Состояние для даты
 
     useEffect(() => {
         if (card) {
+            console.log("Current card date:", card.date); // Логируем дату
             setUpdatedCard({
                 // eslint-disable-next-line react/prop-types
                 title: card.title || '',
@@ -36,9 +61,15 @@ export default function PopBrowse({ card, onClose }) {
                 // eslint-disable-next-line react/prop-types
                 category: card.category || '',
             });
-            setSelectedDate(card.date ? new Date(card.date) : null); // Установка даты, если она есть
+
+            setSelectedDate(card.date ? new Date(card.date) : null);
         }
     }, [card]);
+
+    const handleSelectDate = (date) => {
+        setSelectedDate(date);
+    };
+
 
     const handleDelete = async () => {
         if (window.confirm("Вы уверены, что хотите удалить эту задачу?")) {
@@ -54,6 +85,8 @@ export default function PopBrowse({ card, onClose }) {
 
                 await deleteCard(token, card._id);
                 deleteCardInContext(card._id);
+
+                handleClose();
 
             } catch (error) {
                 console.error('Ошибка удаления задачи:', error);
@@ -94,8 +127,6 @@ export default function PopBrowse({ card, onClose }) {
 
             const responseFromServer = await updateCard(card._id, updatedCardWithDate, token);
 
-            console.log('Ответ сервера:', responseFromServer);
-
             const tasksArray = responseFromServer.tasks;
 
             const updatedCardFromServer = tasksArray.find(item => item._id === card._id);
@@ -108,7 +139,9 @@ export default function PopBrowse({ card, onClose }) {
             updateCardInContext(updatedCardFromServer);
 
             setIsEditing(false);
-            onClose();
+
+            handleClose();
+
         } catch (error) {
             console.error('Ошибка обновления задачи:', error);
         } finally {
@@ -122,14 +155,14 @@ export default function PopBrowse({ card, onClose }) {
     }
 
     return (
-        <div className='pop-browse' id='popBrowse'>
-            <div className='pop-browse__container'>
-                <div className='pop-browse__block'>
-                    <div className='pop-browse__content'>
-                        <div className='pop-browse__top-block'>
-                            <h3 className='pop-browse__ttl'>
+        <PopBrowseWrapper id='popBrowse'>
+            <PopBrowseContainer>
+                <PopBrowseBlock>
+                    <PopBrowseContent>
+                        <PopBrowseTopBlock>
+                            <PopBrowseTitle>
                                 {isEditing ? (
-                                    <input
+                                    <EditTitle
                                         type='text'
                                         name='title'
                                         value={updatedCard.title}
@@ -138,17 +171,17 @@ export default function PopBrowse({ card, onClose }) {
                                 ) : (
                                     updatedCard.title
                                 )}
-                            </h3>
+                            </PopBrowseTitle>
                             <CardTopic $topicColor={card?.topic ? topicColors[card.topic] : 'defaultColor'}>
                                 <TopicText>{card?.topic || 'Нет темы'}</TopicText>
                             </CardTopic>
-                        </div>
-                        <div className='pop-browse__status status'>
-                            <p className='status__p subttl'>Статус</p>
-                            <div className='status__themes'>
-                                <div className='status__theme _gray'>
+                        </PopBrowseTopBlock>
+                        <StatusWrapper>
+                            <StatusText>Статус</StatusText>
+                            <StatusThemes>
+                                <StatusTheme>
                                     {isEditing ? (
-                                        <select
+                                        <SelectStatus
                                             name='status'
                                             value={updatedCard.status}
                                             onChange={handleInputChange}
@@ -158,73 +191,67 @@ export default function PopBrowse({ card, onClose }) {
                                                     {status}
                                                 </option>
                                             ))}
-                                        </select>
+                                        </SelectStatus>
 
                                     ) : (
-                                        <p className='_gray'>{updatedCard.status}</p>
+                                        <StatusThemeText>{updatedCard.status}</StatusThemeText>
                                     )}
-                                </div>
-                            </div>
-                        </div>
-                        <div className='pop-browse__wrap'>
-                            <form
-                                className='pop-browse__form form-browse'
+                                </StatusTheme>
+                            </StatusThemes>
+                        </StatusWrapper>
+                        <PopBrowseWrap>
+                            <PopBrowserForm
                                 id='formBrowseCard'
                                 action='#'
                             >
-                                <div className='form-browse__block'>
-                                    <label htmlFor='textArea01' className='subttl'>
+                                <FormBrowseBlock>
+                                    <PopBrowseLabel htmlFor='textArea01'>
                                         Описание задачи
-                                    </label>
+                                    </PopBrowseLabel>
                                     {isEditing ? (
-                                        <textarea
-                                            className='form-browse__area'
+                                        <FormBrowseTextArea
                                             name='description'
                                             value={updatedCard.description}
                                             onChange={handleInputChange}
                                         />
                                     ) : (
-                                        <textarea
-                                            className='form-browse__area'
+                                        <FormBrowseTextArea
                                             name='description'
                                             readOnly
                                             value={updatedCard.description}
                                         />
                                     )}
-                                </div>
-                            </form>
-                            <Calendar value={selectedDate} onSelect={setSelectedDate} /> {/* Добавление календаря */}
-                        </div>
-                        <div className='pop-browse__btn-browse'>
-                            <div className='btn-group'>
-                                <button
-                                    className='btn-browse__edit _btn-bor _hover03'
+                                </FormBrowseBlock>
+                            </PopBrowserForm>
+                            <Calendar value={selectedDate} onSelect={handleSelectDate} />
+                        </PopBrowseWrap>
+                        <PopBrowseButtons>
+                            <ButtonGroup>
+                                <EditButton
                                     onClick={handleEditToggle}
                                 >
-                                    {isEditing ? 'Отменить' : 'Редактировать'}
-                                </button>
+                                    {isEditing ? 'Отменить' : 'Редактировать задачу'}
+                                </EditButton>
                                 {isEditing && (
-                                    <button
-                                        className='btn-browse__save _btn-bor _hover03'
+                                    <SaveButton
                                         onClick={handleSave}
                                     >
                                         Сохранить
-                                    </button>
+                                    </SaveButton>
                                 )}
-                                <button
-                                    className='btn-browse__delete _btn-bor _hover03'
+                                <DeleteButton
                                     onClick={handleDelete}
                                 >
                                     Удалить задачу
-                                </button>
-                            </div>
-                            <button className='btn-browse__close _btn-bg _hover01' onClick={handleClose}>
+                                </DeleteButton>
+                            </ButtonGroup>
+                            <CloseButton onClick={handleClose}>
                                 Закрыть
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                            </CloseButton>
+                        </PopBrowseButtons>
+                    </PopBrowseContent>
+                </PopBrowseBlock>
+            </PopBrowseContainer>
+        </PopBrowseWrapper>
     );
 }

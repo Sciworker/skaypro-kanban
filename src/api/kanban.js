@@ -17,12 +17,10 @@ export const getCards = async (token) => {
     }
 
     const data = await response.json();
-    console.log(data);
     return data.tasks;
 };
 
 export const createCard = async (token, card) => {
-    console.log('card ', card);
     const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -40,7 +38,6 @@ export const createCard = async (token, card) => {
     }
 
     const data = await response.json();
-    console.log(data);
     return data.tasks;
 }
 
@@ -84,6 +81,5 @@ export const deleteCard = async (token, _id) => {
     }
 
     const data = await response.json();
-    console.log('Удаление выполнено:', data);
     return data;
 };

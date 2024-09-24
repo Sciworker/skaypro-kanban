@@ -41,12 +41,10 @@ function Main({ cards, isLoading, error }) {
 
         try {
             await updateCard(draggedCard._id, updatedCard, token);
-            console.log('Карточка успешно обновлена на сервере');
         } catch (error) {
             console.error('Ошибка при обновлении карточки на сервере', error);
         }
 
-        console.log('Карточка перемещена:', result);
     };
 
     return (
@@ -65,7 +63,6 @@ function Main({ cards, isLoading, error }) {
                                                 columnId={status}
                                                 key={status}
                                                 title={status}
-                                                columnId={status}
                                                 cards={cards.filter(
                                                     (card) => card.status === status
                                                 )}
